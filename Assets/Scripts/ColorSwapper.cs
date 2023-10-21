@@ -51,6 +51,7 @@ public class ColorSwapper : MonoBehaviour
     void Update()
     {
         if (!isSwapping && !reversing)  {
+            GetComponent<Renderer>().material = startColor;
             timer = 0f;
             return;
         }

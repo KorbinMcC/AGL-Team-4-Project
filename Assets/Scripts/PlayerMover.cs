@@ -14,8 +14,9 @@ public class PlayerMover : MonoBehaviour
 
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
-    private bool isGrounded;
     private int currentNumberOfJumps = 3;
+
+    private bool jumped = false;
 
     private void Awake() {
         playerRigidbody = GetComponent<Rigidbody>();
@@ -25,12 +26,17 @@ public class PlayerMover : MonoBehaviour
     void Update() {
         isOnGround();
         if (Input.GetKeyDown(KeyCode.Space) && maxNumberOfJumps > 0) {
-            Jump();
+            jumped = true;
         }
     }
 
     void FixedUpdate()
     {
+        isOnGround();
+        if (jumped) {
+            Jump();
+            jumped = false;
+        }
         stoppingFriction();
         lookInDirection();
         move();
@@ -89,12 +95,7 @@ public class PlayerMover : MonoBehaviour
             Physics.Raycast(transform.position + new Vector3(-.5f, 0, 0), Vector3.down, 1f) ||
             Physics.Raycast(transform.position + new Vector3(0, 0, .5f), Vector3.down, 1f) ||
             Physics.Raycast(transform.position + new Vector3(0, 0, -.5f), Vector3.down, 1f)) {
-            isGrounded = true;
             maxNumberOfJumps = currentNumberOfJumps;
         }
-        else {
-            isGrounded = false;
-        }
-        
     }
 }
