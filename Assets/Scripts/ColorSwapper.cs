@@ -14,20 +14,20 @@ public class ColorSwapper : MonoBehaviour
 
     [SerializeField] public float propagationSpeed = 1f;
 
+    [SerializeField] public float viewDistance = 1f;
+
     private bool isSwapping = false;
     private bool reversing = false;
     private float timer = 0f;
     private float lerp = 0f;
-
-    //on key press down 'N' swap colors
 
     private void Awake() {
         //set player to object with tag "Player"
         player = GameObject.FindGameObjectWithTag("Player");
     }
     private void OnGUI() { //set timer to 3 when pressed
-        Event e = Event.current;
-        if(e.isKey && e.keyCode == KeyCode.N){
+        Event e = Event.current;//when shift is pressed
+        if(e.isKey && e.keyCode == KeyCode.LeftShift){
             //delay flashColor based on distance from player
             flashColor();
         }
@@ -36,6 +36,10 @@ public class ColorSwapper : MonoBehaviour
     public void flashColor() {
         //delay flashColor based on distance from player
         float distance = Vector3.Distance(player.transform.position, this.transform.position);
+        //if distance is too far, don't flash
+        if (distance > viewDistance * propagationSpeed) {
+            return;
+        }
         float delay = distance / (10f * propagationSpeed);
         Invoke("flashColorHelper", delay);
     }
@@ -52,7 +56,6 @@ public class ColorSwapper : MonoBehaviour
         }
         if (lerp > .99f) {
             if (reversing) {
-                print("reversing");
                 isSwapping = false;
                 reversing = false;
                 timer = 0f;
@@ -61,7 +64,6 @@ public class ColorSwapper : MonoBehaviour
                 return;
             }
             else if (!reversing) {
-                print("1 way");
                 reversing = true;
                 timer = 0f;
                 lerp = 0f;

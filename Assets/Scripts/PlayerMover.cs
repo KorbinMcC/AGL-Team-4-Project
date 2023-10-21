@@ -10,63 +10,91 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private float jumpForce = 300f;
 
     [SerializeField] private int maxNumberOfJumps = 3;
+    [SerializeField] private int maxSpeed = 5;
 
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
     private bool isGrounded;
-    private int currentNumberOfJumps = 0;
+    private int currentNumberOfJumps = 3;
 
     private void Awake() {
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
     }
 
-    void Update()
+    void Update() {
+        isOnGround();
+        if (Input.GetKeyDown(KeyCode.Space) && maxNumberOfJumps > 0) {
+            Jump();
+        }
+    }
+
+    void FixedUpdate()
     {
-        Vector3 movementVector = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime * Vector3.right   //horizontal movement
-                                + Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime *  Vector3.forward; //in and out movement
+        stoppingFriction();
+        lookInDirection();
+        move();
+    }
 
-        //get the vector of the direction of the player is moving
-        Vector3 directionVector = ((transform.position + movementVector) - transform.position).normalized;
-
-        Run();
-
-        //transform.position += movementVector;
-
-        //if moving, slowly rotate towards the direction player is moving 
-        float rotateSpeed = 10f;
-        if(directionVector != Vector3.zero){
-            Quaternion targetRotation = Quaternion.LookRotation(directionVector);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotateSpeed);
-        } else {
-            Quaternion targetRotation = Quaternion.LookRotation(transform.forward);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotateSpeed);
+    void stoppingFriction() {
+        //while no inputs, slow down player
+        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) {
+            playerRigidbody.velocity *= .9f;
         }
 
-        //jumping
-        if(Input.GetKeyDown(KeyCode.Space)){
-            if(currentNumberOfJumps > 0){
-                playerAnimator.SetTrigger(JumpTrigger);
-                currentNumberOfJumps--;
-                playerRigidbody.AddForce(Vector3.up * jumpForce);
-                isGrounded = false;
+        if (playerRigidbody.velocity.magnitude < .1f) {
+            playerRigidbody.velocity = Vector3.zero;
+        }
+    }
+
+    void lookInDirection() {
+        //look in direction over time
+        Vector3 direction = getDirection();
+        if (direction != Vector3.zero) {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), .15f);
+        }
+
+    }
+
+    void move() {
+        Vector3 direction = getDirection();
+        if (direction != Vector3.zero) {
+            playerRigidbody.AddForce(direction * moveSpeed);
+            //clamp movement speed
+            if (playerRigidbody.velocity.magnitude > maxSpeed) {
+                playerRigidbody.velocity = playerRigidbody.velocity.normalized * maxSpeed;
             }
-        }
 
-        if(isGrounded) { 
-            currentNumberOfJumps = maxNumberOfJumps;
         }
-
     }
 
-    private void Run()
-    {
-        Vector3 playerVelocity = new Vector3(Input.GetAxis("Horizontal") * moveSpeed, playerRigidbody.velocity.y, Input.GetAxis("Vertical") * moveSpeed);
-        playerRigidbody.velocity = playerVelocity;
+    void Jump() {
+            playerRigidbody.AddForce(Vector3.up * jumpForce);
+            maxNumberOfJumps--;
+            if (playerAnimator != null)
+                playerAnimator.SetTrigger(JumpTrigger);
     }
 
+    Vector3 getDirection() {
+        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        return direction;
+    }
 
-    private void OnCollisionEnter(Collision other) {
-        isGrounded = true;
+    void isOnGround() {
+        //make 5 raycasts down from player to check if on ground
+        //if any of them hit ground, isGrounded = true
+        //else isGrounded = false
+        if (Physics.Raycast(transform.position, Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(.5f, 0, 0), Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(-.5f, 0, 0), Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(0, 0, .5f), Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(0, 0, -.5f), Vector3.down, 1f)) {
+            isGrounded = true;
+            maxNumberOfJumps = currentNumberOfJumps;
+        }
+        else {
+            isGrounded = false;
+        }
+        
     }
 }
