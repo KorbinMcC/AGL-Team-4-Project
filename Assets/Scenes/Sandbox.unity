@@ -3810,10 +3810,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BatPlayer
       objectReference: {fileID: 0}
-    - target: {fileID: 3570423258754627455, guid: e01025978d2060041824db5c69f50d77, type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4901,10 +4897,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2026122617}
     m_Modifications:
-    - target: {fileID: 439151692051883293, guid: 12e4bb6f233ab469291f9efc4f9f904e, type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 4483454614709034912, guid: 9563350614a06459c986a5708a76b01c, type: 3}
     - target: {fileID: 439151692051883293, guid: 12e4bb6f233ab469291f9efc4f9f904e, type: 3}
       propertyPath: endColor
       value: 
