@@ -415,6 +415,7 @@ GameObject:
   - component: {fileID: 6714179825836765665}
   - component: {fileID: 7696240022325608662}
   - component: {fileID: 1511061676550997096}
+  - component: {fileID: 7809296931034434784}
   m_Layer: 0
   m_Name: BatPlayer
   m_TagString: Player
@@ -488,25 +489,6 @@ MonoBehaviour:
   moveSpeed: 5
   jumpForce: 300
   maxNumberOfJumps: 3
-  maxSpeed: 5
---- !u!114 &2733713738476010922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3570423258754627455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2768e843386e149983f5ee891fab9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pointLight: {fileID: 1427336078776122215}
-  defaultLightIntensity: 1
-  maxLightIntensity: 3
-  defaultLightRange: 10
-  maxLightRange: 100
-  illuminateTime: 2
 --- !u!95 &5657754928999645678
 Animator:
   serializedVersion: 5
@@ -664,6 +646,19 @@ AudioReverbFilter:
   m_LFReference: 250
   m_ReflectionsDelay: 0
   m_ReverbPreset: 27
+--- !u!114 &7809296931034434784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3570423258754627455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a645e9fc138c2a4096abc03dce82e94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resetLevel: -1
 --- !u!1 &4631334542096941825
 GameObject:
   m_ObjectHideFlags: 0
