@@ -16,9 +16,6 @@ public class ColorSwapper : MonoBehaviour
 
     [SerializeField] public float viewDistance = 1f;
 
-    [SerializeField] public float maxCooldownTime = 4f;
-
-    public float cooldownTime = 0f;
 
 
     private bool isSwapping = false;
@@ -32,9 +29,6 @@ public class ColorSwapper : MonoBehaviour
     }
 
     public void flashColor() {
-        if (cooldownTime > 0) {
-            return;
-        }
         //delay flashColor based on distance from player
         float distance = Vector3.Distance(player.transform.position, this.transform.position);
         //if distance is too far, don't flash
@@ -42,7 +36,6 @@ public class ColorSwapper : MonoBehaviour
             return;
         }
         float delay = distance / (10f * propagationSpeed);
-        cooldownTime = maxCooldownTime;
         Invoke("flashColorHelper", delay);
     }
 
@@ -52,9 +45,6 @@ public class ColorSwapper : MonoBehaviour
 
     void Update()
     {
-        if (cooldownTime > 0) {
-            cooldownTime -= Time.deltaTime;
-        }
         if (!isSwapping && !reversing)  {
             GetComponent<Renderer>().material = startColor;
             timer = 0f;

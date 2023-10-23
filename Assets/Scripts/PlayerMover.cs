@@ -12,6 +12,8 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private int maxNumberOfJumps = 3;
     [SerializeField] private int maxSpeed = 5;
 
+    private new BatAudio audio;
+
     private Rigidbody playerRigidbody;
     private Animator playerAnimator;
     private int currentNumberOfJumps = 3;
@@ -19,6 +21,7 @@ public class PlayerMover : MonoBehaviour
     private bool jumped = false;
 
     private void Awake() {
+        audio = GetComponent<BatAudio>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
     }
@@ -35,6 +38,7 @@ public class PlayerMover : MonoBehaviour
         isOnGround();
         if (jumped) {
             Jump();
+            audio.PlayFlap();
             jumped = false;
         }
         stoppingFriction();
