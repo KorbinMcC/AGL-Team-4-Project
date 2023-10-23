@@ -18,7 +18,7 @@ public class ColorSwapper : MonoBehaviour
 
     [SerializeField] public float maxCooldownTime = 4f;
 
-    private float cooldownTime = 0f;
+    public float cooldownTime = 0f;
 
 
     private bool isSwapping = false;
@@ -30,19 +30,11 @@ public class ColorSwapper : MonoBehaviour
         //set player to object with tag "Player"
         player = GameObject.FindGameObjectWithTag("Player");
     }
-    private void OnGUI() { //set timer to 3 when pressed, if cooldown is 0
+
+    public void flashColor() {
         if (cooldownTime > 0) {
             return;
         }
-        Event e = Event.current;//when shift is pressed
-        if(e.isKey && e.keyCode == KeyCode.LeftShift){
-            //delay flashColor based on distance from player
-            flashColor();
-            cooldownTime = maxCooldownTime;
-        }
-    }
-
-    public void flashColor() {
         //delay flashColor based on distance from player
         float distance = Vector3.Distance(player.transform.position, this.transform.position);
         //if distance is too far, don't flash
@@ -50,6 +42,7 @@ public class ColorSwapper : MonoBehaviour
             return;
         }
         float delay = distance / (10f * propagationSpeed);
+        cooldownTime = maxCooldownTime;
         Invoke("flashColorHelper", delay);
     }
 
