@@ -6,11 +6,11 @@ public class PlayerMover : MonoBehaviour
 {
     private readonly int JumpTrigger = Animator.StringToHash("Jump");
 
-    [SerializeField] private float moveSpeed = 15f;
+    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 300f;
 
     [SerializeField] private int maxNumberOfJumps = 3;
-    [SerializeField] private int maxSpeed = 5;
+    //[SerializeField] private int maxSpeed = 5;
 
     private new BatAudio audio;
 
@@ -41,41 +41,52 @@ public class PlayerMover : MonoBehaviour
             audio.PlayFlap();
             jumped = false;
         }
-        stoppingFriction();
+        //stoppingFriction();
         lookInDirection();
-        move();
+        //move();
+        MoveTwo();
     }
 
-    void stoppingFriction() {
-        //while no inputs, slow down player
-        if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) {
-            playerRigidbody.velocity *= .9f;
-        }
+    // void stoppingFriction() {
+    //     //while no inputs, slow down player
+    //     if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) {
+    //         playerRigidbody.velocity *= .9f;
+    //     }
 
-        if (playerRigidbody.velocity.magnitude < .1f) {
-            playerRigidbody.velocity = Vector3.zero;
-        }
-    }
+    //     if (playerRigidbody.velocity.magnitude < .1f) {
+    //         playerRigidbody.velocity = Vector3.zero;
+    //     }
+    // }
 
     void lookInDirection() {
         //look in direction over time
         Vector3 direction = getDirection();
         if (direction != Vector3.zero) {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), .15f);
+        } else {
+            //transform.rotation = Quaternion.LookRotation(transform.forward);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(transform.forward), .15f);
         }
 
     }
 
-    void move() {
-        Vector3 direction = getDirection();
-        if (direction != Vector3.zero) {
-            playerRigidbody.AddForce(direction * moveSpeed);
-            //clamp movement speed
-            if (playerRigidbody.velocity.magnitude > maxSpeed) {
-                playerRigidbody.velocity = playerRigidbody.velocity.normalized * maxSpeed;
-            }
+    // void move() {
+    //     Vector3 direction = getDirection();
+    //     if (direction != Vector3.zero) {
+    //         playerRigidbody.AddForce(direction * moveSpeed);
+    //         //clamp movement speed
+    //         if (playerRigidbody.velocity.magnitude > maxSpeed) {
+    //             playerRigidbody.velocity = playerRigidbody.velocity.normalized * maxSpeed;
+    //         }
 
-        }
+    //     }
+    // }
+
+    private void MoveTwo()
+    {
+        Vector3 direction = getDirection();
+        //set player velocity based on input direction, but don't touch y velocity since that affects jumps.
+        playerRigidbody.velocity = new Vector3(direction.x * moveSpeed, playerRigidbody.velocity.y, direction.z * moveSpeed);
     }
 
     void Jump() {
@@ -86,7 +97,7 @@ public class PlayerMover : MonoBehaviour
     }
 
     Vector3 getDirection() {
-        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 direction = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
         return direction;
     }
 
