@@ -47,17 +47,6 @@ public class PlayerMover : MonoBehaviour
         MoveTwo();
     }
 
-    // void stoppingFriction() {
-    //     //while no inputs, slow down player
-    //     if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) {
-    //         playerRigidbody.velocity *= .9f;
-    //     }
-
-    //     if (playerRigidbody.velocity.magnitude < .1f) {
-    //         playerRigidbody.velocity = Vector3.zero;
-    //     }
-    // }
-
     void lookInDirection() {
         //look in direction over time
         Vector3 direction = getDirection();
@@ -69,18 +58,6 @@ public class PlayerMover : MonoBehaviour
         }
 
     }
-
-    // void move() {
-    //     Vector3 direction = getDirection();
-    //     if (direction != Vector3.zero) {
-    //         playerRigidbody.AddForce(direction * moveSpeed);
-    //         //clamp movement speed
-    //         if (playerRigidbody.velocity.magnitude > maxSpeed) {
-    //             playerRigidbody.velocity = playerRigidbody.velocity.normalized * maxSpeed;
-    //         }
-
-    //     }
-    // }
 
     private void MoveTwo()
     {
@@ -106,10 +83,10 @@ public class PlayerMover : MonoBehaviour
         //if any of them hit ground, isGrounded = true
         //else isGrounded = false
         if (Physics.Raycast(transform.position, Vector3.down, 1f) ||
-            Physics.Raycast(transform.position + new Vector3(.5f, 0, 0), Vector3.down, 1f) ||
-            Physics.Raycast(transform.position + new Vector3(-.5f, 0, 0), Vector3.down, 1f) ||
-            Physics.Raycast(transform.position + new Vector3(0, 0, .5f), Vector3.down, 1f) ||
-            Physics.Raycast(transform.position + new Vector3(0, 0, -.5f), Vector3.down, 1f)) {
+            Physics.Raycast(transform.position + new Vector3(.25f, 0, 0), Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(-.25f, 0, 0), Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(0, 0, .25f), Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(0, 0, -.25f), Vector3.down, 1f)) {
             maxNumberOfJumps = currentNumberOfJumps;
         }
     }

@@ -6,11 +6,11 @@ public class lampActivation : MonoBehaviour
 {
     List<GameObject> objectsToBeFlashed;
 
-    public float distance = 2f;
+    public float distance;
 
-    public float frequency = 1f;
+    public float frequency;
 
-    private float timer;
+    private float timer = 5f;
 
     void Start()
     {
@@ -25,8 +25,9 @@ public class lampActivation : MonoBehaviour
     }
 
     void Update() {
-        timer += Time.time;
-        if (timer >= 1 / frequency) {
+        timer += Time.deltaTime;
+        print(timer);
+        if (timer >= frequency) {
             timer = 0;
             for (int i = 0; i < objectsToBeFlashed.Count; i++) {
                 objectsToBeFlashed[i].GetComponent<ColorSwapper>().flashColor(this.transform.position, distance);

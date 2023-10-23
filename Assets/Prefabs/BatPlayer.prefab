@@ -658,7 +658,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a645e9fc138c2a4096abc03dce82e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resetLevel: -1
+  resetLevel: -10
 --- !u!1 &4631334542096941825
 GameObject:
   m_ObjectHideFlags: 0

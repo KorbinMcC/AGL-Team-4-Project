@@ -31,7 +31,6 @@ public class ActivateSonar : MonoBehaviour
     }
     private void OnGUI()
     {
-        print(cooldown);
         Event e = Event.current;//when shift is pressed
         if (e.isKey && e.keyCode == KeyCode.LeftShift && cooldown <= 0)
         {

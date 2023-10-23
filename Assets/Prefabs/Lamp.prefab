@@ -167,10 +167,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startColor: {fileID: 2100000, guid: 11441381fc4564ec29e6c7d7c4f6b5ea, type: 2}
-  endColor: {fileID: 2100000, guid: 2558306c22fc140458a0393f7dfae332, type: 2}
-  colorChangeSpeed: 3
+  endColor: {fileID: 2100000, guid: 9b0523c1ad41fea4caa084e25cdc4eb8, type: 2}
+  colorChangeSpeed: 1
   propagationSpeed: 1
-  viewDistance: 1
 --- !u!1 &5616820495303577556
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +289,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startColor: {fileID: 2100000, guid: 11441381fc4564ec29e6c7d7c4f6b5ea, type: 2}
-  endColor: {fileID: 2100000, guid: b8f2822094b3c8446b6ed5f33879f516, type: 2}
-  colorChangeSpeed: 3
+  endColor: {fileID: 2100000, guid: 9ee1a2847283c994e8768e630a221695, type: 2}
+  colorChangeSpeed: 1
   propagationSpeed: 1
-  viewDistance: 1
