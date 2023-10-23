@@ -8,7 +8,6 @@ public class ColorSwapper : MonoBehaviour
     public Material startColor;
     public Material endColor;
 
-    public GameObject player;
 
     [SerializeField] private float colorChangeSpeed = .2f;
 
@@ -23,16 +22,11 @@ public class ColorSwapper : MonoBehaviour
     private float timer = 0f;
     private float lerp = 0f;
 
-    private void Awake() {
-        //set player to object with tag "Player"
-        player = GameObject.FindGameObjectWithTag("Player");
-    }
-
-    public void flashColor() {
+    public void flashColor(Vector3 source, float range) {
         //delay flashColor based on distance from player
-        float distance = Vector3.Distance(player.transform.position, this.transform.position);
+        float distance = Vector3.Distance(source, this.transform.position);
         //if distance is too far, don't flash
-        if (distance > viewDistance * propagationSpeed) {
+        if (distance > range * propagationSpeed) {
             return;
         }
         float delay = distance / (10f * propagationSpeed);
