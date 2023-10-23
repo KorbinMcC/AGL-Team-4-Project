@@ -16,9 +16,6 @@ public class ColorSwapper : MonoBehaviour
 
     [SerializeField] public float viewDistance = 1f;
 
-    [SerializeField] public float maxCooldownTime = 4f;
-
-    private float cooldownTime = 0f;
 
 
     private bool isSwapping = false;
@@ -29,17 +26,6 @@ public class ColorSwapper : MonoBehaviour
     private void Awake() {
         //set player to object with tag "Player"
         player = GameObject.FindGameObjectWithTag("Player");
-    }
-    private void OnGUI() { //set timer to 3 when pressed, if cooldown is 0
-        if (cooldownTime > 0) {
-            return;
-        }
-        Event e = Event.current;//when shift is pressed
-        if(e.isKey && e.keyCode == KeyCode.LeftShift){
-            //delay flashColor based on distance from player
-            flashColor();
-            cooldownTime = maxCooldownTime;
-        }
     }
 
     public void flashColor() {
@@ -59,9 +45,6 @@ public class ColorSwapper : MonoBehaviour
 
     void Update()
     {
-        if (cooldownTime > 0) {
-            cooldownTime -= Time.deltaTime;
-        }
         if (!isSwapping && !reversing)  {
             GetComponent<Renderer>().material = startColor;
             timer = 0f;
