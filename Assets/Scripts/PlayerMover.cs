@@ -5,6 +5,10 @@ using UnityEngine;
 public class PlayerMover : MonoBehaviour
 {
     private readonly int JumpTrigger = Animator.StringToHash("Jump");
+    private readonly int landingTrigger = Animator.StringToHash("IsLanding");
+    private readonly int takingOffTrigger = Animator.StringToHash("IsTakingOff");
+
+    private int isGroundedTrigger = Animator.StringToHash("IsGrounded");
 
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 300f;
@@ -19,6 +23,8 @@ public class PlayerMover : MonoBehaviour
     private int currentNumberOfJumps = 3;
 
     private bool jumped = false;
+
+    bool wasOnGround = false;
 
     private void Awake() {
         audio = GetComponent<BatAudio>();
@@ -35,7 +41,6 @@ public class PlayerMover : MonoBehaviour
 
     void FixedUpdate()
     {
-        isOnGround();
         if (jumped) {
             Jump();
             audio.PlayFlap();
@@ -88,6 +93,18 @@ public class PlayerMover : MonoBehaviour
             Physics.Raycast(transform.position + new Vector3(0, 0, .25f), Vector3.down, 1f) ||
             Physics.Raycast(transform.position + new Vector3(0, 0, -.25f), Vector3.down, 1f)) {
             maxNumberOfJumps = currentNumberOfJumps;
+            playerAnimator.SetBool(isGroundedTrigger, true);
+            if (!wasOnGround) {
+                playerAnimator.SetTrigger(landingTrigger);
+                wasOnGround = true;
+            }
+        }
+        else {
+            playerAnimator.SetBool(isGroundedTrigger, false);
+            if (wasOnGround) {
+                playerAnimator.SetTrigger(takingOffTrigger);
+                wasOnGround = false;
+            }
         }
     }
 }

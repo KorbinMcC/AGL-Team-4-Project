@@ -27,12 +27,11 @@ public class ColorSwapper : MonoBehaviour
         if (distance > range) {
             return;
         }
-        if (distanceRatio > Mathf.Clamp((1- (distance / range)), 0.001f, .99f)) {
-            //return;
-        }
         if (!isSwapping) {
-            distanceRatio = Mathf.Clamp((1- (distance / range)), 0.001f, .99f);
+            isSwapping = false;
+        reversing = false;
         }
+        distanceRatio = Mathf.Clamp((1- (distance / range)), 0.001f, .99f);
         float delay = distance / (10f * propagationSpeed);
         Invoke("flashColorHelper", delay);
     }
@@ -44,11 +43,11 @@ public class ColorSwapper : MonoBehaviour
 
     void Update()
     {
-        if (!isSwapping && !reversing)  {
-            GetComponent<Renderer>().material = startColor;
-            timer = 0f;
+        //if not swapping, return to start color, exit
+        if (!isSwapping)  {
             return;
         }
+
         if (!reversing) {
             if (lerp > distanceRatio) {
                 reversing = true;
@@ -61,10 +60,11 @@ public class ColorSwapper : MonoBehaviour
                 isSwapping = false;
                 timer = 0f;
                 lerp = 0f;
+                GetComponent<Renderer>().material = startColor;
+                return;
             }
             timer -= Time.deltaTime * distanceRatio;
         }
-
         lerp = Mathf.PingPong(timer, colorChangeSpeed) / colorChangeSpeed;
         showWithLightValue(lerp);
     }
