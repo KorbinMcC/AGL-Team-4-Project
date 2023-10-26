@@ -5,6 +5,10 @@ using UnityEngine;
 public class PlayerMover : MonoBehaviour
 {
     private readonly int JumpTrigger = Animator.StringToHash("Jump");
+    private readonly int landingTrigger = Animator.StringToHash("IsLanding");
+    private readonly int takingOffTrigger = Animator.StringToHash("IsTakingOff");
+
+    private int isGroundedTrigger = Animator.StringToHash("IsGrounded");
 
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 300f;
@@ -19,6 +23,8 @@ public class PlayerMover : MonoBehaviour
     private int currentNumberOfJumps = 3;
 
     private bool jumped = false;
+
+    bool wasOnGround = false;
 
     private void Awake() {
         audio = GetComponent<BatAudio>();
@@ -35,7 +41,6 @@ public class PlayerMover : MonoBehaviour
 
     void FixedUpdate()
     {
-        isOnGround();
         if (jumped) {
             Jump();
             audio.PlayFlap();
@@ -46,17 +51,6 @@ public class PlayerMover : MonoBehaviour
         //move();
         MoveTwo();
     }
-
-    // void stoppingFriction() {
-    //     //while no inputs, slow down player
-    //     if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) {
-    //         playerRigidbody.velocity *= .9f;
-    //     }
-
-    //     if (playerRigidbody.velocity.magnitude < .1f) {
-    //         playerRigidbody.velocity = Vector3.zero;
-    //     }
-    // }
 
     void lookInDirection() {
         //look in direction over time
@@ -69,18 +63,6 @@ public class PlayerMover : MonoBehaviour
         }
 
     }
-
-    // void move() {
-    //     Vector3 direction = getDirection();
-    //     if (direction != Vector3.zero) {
-    //         playerRigidbody.AddForce(direction * moveSpeed);
-    //         //clamp movement speed
-    //         if (playerRigidbody.velocity.magnitude > maxSpeed) {
-    //             playerRigidbody.velocity = playerRigidbody.velocity.normalized * maxSpeed;
-    //         }
-
-    //     }
-    // }
 
     private void MoveTwo()
     {
@@ -106,11 +88,23 @@ public class PlayerMover : MonoBehaviour
         //if any of them hit ground, isGrounded = true
         //else isGrounded = false
         if (Physics.Raycast(transform.position, Vector3.down, 1f) ||
-            Physics.Raycast(transform.position + new Vector3(.5f, 0, 0), Vector3.down, 1f) ||
-            Physics.Raycast(transform.position + new Vector3(-.5f, 0, 0), Vector3.down, 1f) ||
-            Physics.Raycast(transform.position + new Vector3(0, 0, .5f), Vector3.down, 1f) ||
-            Physics.Raycast(transform.position + new Vector3(0, 0, -.5f), Vector3.down, 1f)) {
+            Physics.Raycast(transform.position + new Vector3(.25f, 0, 0), Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(-.25f, 0, 0), Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(0, 0, .25f), Vector3.down, 1f) ||
+            Physics.Raycast(transform.position + new Vector3(0, 0, -.25f), Vector3.down, 1f)) {
             maxNumberOfJumps = currentNumberOfJumps;
+            playerAnimator.SetBool(isGroundedTrigger, true);
+            if (!wasOnGround) {
+                playerAnimator.SetTrigger(landingTrigger);
+                wasOnGround = true;
+            }
+        }
+        else {
+            playerAnimator.SetBool(isGroundedTrigger, false);
+            if (wasOnGround) {
+                playerAnimator.SetTrigger(takingOffTrigger);
+                wasOnGround = false;
+            }
         }
     }
 }

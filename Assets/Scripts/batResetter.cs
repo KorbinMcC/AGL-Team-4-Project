@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class batResetter : MonoBehaviour
 {
-    public int resetLevel = -1;
     private Vector3 startPos;
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            this.transform.position = startPos;
-        }
-        if (this.transform.position.y < resetLevel) {
-            this.transform.position = startPos;
-        }
+    void Start() {
+        startPos = transform.position;
+    }
+
+    public void setStartPos(Vector3 pos) {
+        startPos = pos;
+    }
+
+    public void resetBat() {
+        transform.position = startPos;
     }
 }

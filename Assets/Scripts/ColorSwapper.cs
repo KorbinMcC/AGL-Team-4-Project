@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,75 +8,68 @@ public class ColorSwapper : MonoBehaviour
     public Material startColor;
     public Material endColor;
 
-    public GameObject player;
 
     [SerializeField] private float colorChangeSpeed = .2f;
 
     [SerializeField] public float propagationSpeed = 1f;
-
-    [SerializeField] public float viewDistance = 1f;
-
-
 
     private bool isSwapping = false;
     private bool reversing = false;
     private float timer = 0f;
     private float lerp = 0f;
 
-    private void Awake() {
-        //set player to object with tag "Player"
-        player = GameObject.FindGameObjectWithTag("Player");
-    }
+    private float distanceRatio = 0f;
 
-    public void flashColor() {
+    public void flashColor(Vector3 source, float range) {
         //delay flashColor based on distance from player
-        float distance = Vector3.Distance(player.transform.position, this.transform.position);
+        float distance = Vector3.Distance(source, this.transform.position);
         //if distance is too far, don't flash
-        if (distance > viewDistance * propagationSpeed) {
+        if (distance > range) {
             return;
         }
+        if (!isSwapping) {
+            isSwapping = false;
+        reversing = false;
+        }
+        distanceRatio = Mathf.Clamp((1- (distance / range)), 0.001f, .99f);
         float delay = distance / (10f * propagationSpeed);
         Invoke("flashColorHelper", delay);
     }
 
     private void flashColorHelper() {
         isSwapping = true;
+        reversing = false;
     }
 
     void Update()
     {
-        if (!isSwapping && !reversing)  {
-            GetComponent<Renderer>().material = startColor;
-            timer = 0f;
+        //if not swapping, return to start color, exit
+        if (!isSwapping)  {
             return;
         }
-        if (lerp > .99f) {
-            if (reversing) {
-                isSwapping = false;
-                reversing = false;
-                timer = 0f;
-                lerp = 0f;
-                swapColors();
-                return;
-            }
-            else if (!reversing) {
-                reversing = true;
-                timer = 0f;
-                lerp = 0f;
-                swapColors();
-                return;
-            }
-        }
 
-        timer += Time.deltaTime;
+        if (!reversing) {
+            if (lerp > distanceRatio) {
+                reversing = true;
+            }
+            timer += Time.deltaTime * distanceRatio;
+        }
+        else if (reversing) {
+            if (lerp <= 0.01f) {
+                reversing = false;
+                isSwapping = false;
+                timer = 0f;
+                lerp = 0f;
+                GetComponent<Renderer>().material = startColor;
+                return;
+            }
+            timer -= Time.deltaTime * distanceRatio;
+        }
         lerp = Mathf.PingPong(timer, colorChangeSpeed) / colorChangeSpeed;
-        GetComponent<Renderer>().material.Lerp(startColor, endColor, lerp);
+        showWithLightValue(lerp);
     }
 
-    void swapColors() { //swap colors
-        Material temp = startColor;
-        startColor = endColor;
-        endColor = temp;
-        
+    void showWithLightValue(float lightValue) {
+        GetComponent<Renderer>().material.Lerp(startColor, endColor, lightValue);
     }
 }

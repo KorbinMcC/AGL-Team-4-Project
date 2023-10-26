@@ -12,6 +12,8 @@ public class ActivateSonar : MonoBehaviour
 
     public float maxCooldown = 5f;
 
+    public float viewDistance = 5f;
+
     private void Awake()
     {
         objectsToBeFlashed = GameObject.FindGameObjectsWithTag("Flashing");
@@ -29,13 +31,12 @@ public class ActivateSonar : MonoBehaviour
     }
     private void OnGUI()
     {
-        print(cooldown);
         Event e = Event.current;//when shift is pressed
         if (e.isKey && e.keyCode == KeyCode.LeftShift && cooldown <= 0)
         {
             for (int i = 0; i < objectsToBeFlashed.Length; i++)
             {
-                objectsToBeFlashed[i].GetComponent<ColorSwapper>().flashColor();
+                objectsToBeFlashed[i].GetComponent<ColorSwapper>().flashColor(this.transform.position, viewDistance);
             }
             cooldown = maxCooldown;
             batAudio.PlaySqueak();
